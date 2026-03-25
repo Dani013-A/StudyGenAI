@@ -1,0 +1,21 @@
+# Gradle
+.gradle/
+build/
+*/build/
+
+# Local config (DO NOT PUSH)
+local.properties
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+
+# OS files
+.DS_Store
+
+# NDK / C++
+.externalNativeBuild/
+.cxx/
+
+# Generated files
+captures/
