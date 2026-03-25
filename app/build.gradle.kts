@@ -11,12 +11,12 @@ plugins {
 
 android {
     namespace = "com.studygenai"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.studygenai"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -67,6 +67,8 @@ android {
         abortOnError = true
         warningsAsErrors = true
         checkReleaseBuilds = false
+
+        disable += "OldTargetApi"
     }
 
     compileOptions {
