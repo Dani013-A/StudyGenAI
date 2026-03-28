@@ -105,13 +105,13 @@ fun LoginScreen(
                 text = "Welcome back",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold,
-                color = DarkNavy
+                color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface
             )
 
             Text(
                 text = "Sign in to continue studying",
                 fontSize = 14.sp,
-                color = DarkNavy.copy(alpha = 0.6f),
+                color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                 modifier = Modifier.padding(top = 6.dp)
             )
 
@@ -122,7 +122,7 @@ fun LoginScreen(
                 shape = RoundedCornerShape(24.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.95f)
+                    containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surface.copy(alpha = 0.95f)
                 ),
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -249,7 +249,7 @@ fun LoginScreen(
             ) {
                 Text(
                     "Don't have an account? ",
-                    color = DarkNavy.copy(alpha = 0.6f)
+                    color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                 )
                 TextButton(
                     onClick = {

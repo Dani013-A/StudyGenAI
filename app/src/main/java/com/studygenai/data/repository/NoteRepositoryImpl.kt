@@ -23,7 +23,8 @@ class NoteRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val auth: FirebaseAuth,
     private val storageService: StorageService,
-    private val ocrEngine: OcrEngine
+    private val ocrEngine: OcrEngine,
+    @dagger.hilt.android.qualifiers.ApplicationContext private val context: android.content.Context
 ) : NoteRepository {
 
     private fun notesCollection() = firestore
@@ -34,27 +35,41 @@ class NoteRepositoryImpl @Inject constructor(
     override suspend fun uploadNote(
         title: String,
         subject: String,
-        imageUriString: String
-    ): Result<Note> {
-        return try {
-            val uri = Uri.parse(imageUriString)
+        fileUriString: String,
+        isPdf: Boolean
+    ): Result<Note> = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+        try {
+            val uri = Uri.parse(fileUriString)
 
-            // Step 1 — save image locally
+            // Step 1 — save file locally
             val saveResult = storageService.saveImageLocally(uri)
             if (saveResult.isFailure) {
-                return Result.failure(saveResult.exceptionOrNull()
-                    ?: Exception("Failed to save image"))
+                return@withContext Result.failure(saveResult.exceptionOrNull()
+                    ?: Exception("Failed to save file"))
             }
             val localPath = saveResult.getOrThrow()
 
             // Step 2 — run OCR
-            val bitmap = com.studygenai.utils.ImageUtils.uriToBitmap(uri)
-            val rawText = if (bitmap != null) {
-                when (val ocrResult = ocrEngine.extractText(bitmap)) {
-                    is OcrResult.Success -> ocrResult.text
-                    is OcrResult.Failure -> ""
+            var rawText = ""
+            if (isPdf) {
+                val bitmaps = com.studygenai.utils.PdfUtils.getBitmapsFromPdfUri(context, uri)
+                val textBuilder = StringBuilder()
+                for (bitmap in bitmaps) {
+                    when (val ocrResult = ocrEngine.extractText(bitmap)) {
+                        is OcrResult.Success -> textBuilder.append(ocrResult.text).append("\n")
+                        is OcrResult.Failure -> {}
+                    }
                 }
-            } else ""
+                rawText = textBuilder.toString()
+            } else {
+                val bitmap = com.studygenai.utils.ImageUtils.uriToBitmap(uri)
+                if (bitmap != null) {
+                    when (val ocrResult = ocrEngine.extractText(bitmap)) {
+                        is OcrResult.Success -> rawText = ocrResult.text
+                        is OcrResult.Failure -> {}
+                    }
+                }
+            }
 
             // Step 3 — save to Firestore
             val docRef = notesCollection().document()
@@ -74,10 +89,13 @@ class NoteRepositoryImpl @Inject constructor(
                 "imageUrl"  to note.imageUrl,
                 "createdAt" to note.createdAt
             )
-            docRef.set(data).await()
+            // Remove .await() because Firestore writes pend until network sync.
+            // Using .await() causes it to hang indefinitely if there is no strong network connection.
+            docRef.set(data)
+            
             Result.success(note)
-        } catch (e: Exception) {
-            Result.failure(e)
+        } catch (e: Throwable) {
+            Result.failure(Exception(e.message ?: "Unknown error"))
         }
     }
 
@@ -162,6 +180,50 @@ class NoteRepositoryImpl @Inject constructor(
             emit(notes)
         } catch (e: Exception) {
             emit(emptyList())
+        }
+    }
+
+    override suspend fun saveScannedNote(
+        title: String,
+        subject: String,
+        rawText: String,
+        imageUriString: String?
+    ): Result<Note> = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+        try {
+            var localPath = ""
+
+            // Save image locally if provided
+            if (!imageUriString.isNullOrEmpty()) {
+                val uri = Uri.parse(imageUriString)
+                val saveResult = storageService.saveImageLocally(uri)
+                if (saveResult.isSuccess) {
+                    localPath = saveResult.getOrThrow()
+                }
+            }
+
+            // Save to Firestore
+            val docRef = notesCollection().document()
+            val note = Note(
+                id        = docRef.id,
+                title     = title,
+                subject   = subject,
+                rawText   = rawText,
+                imageUrl  = localPath,
+                createdAt = System.currentTimeMillis()
+            )
+            val data = mapOf(
+                "id"        to note.id,
+                "title"     to note.title,
+                "subject"   to note.subject,
+                "rawText"   to note.rawText,
+                "imageUrl"  to note.imageUrl,
+                "createdAt" to note.createdAt
+            )
+            docRef.set(data)
+            
+            Result.success(note)
+        } catch (e: Throwable) {
+            Result.failure(Exception(e.message ?: "Unknown error"))
         }
     }
 }

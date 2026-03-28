@@ -12,18 +12,18 @@ import javax.inject.Singleton
 class StorageService @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
-    // Saves image from URI to app's internal storage
+    // Saves image from URI locally
     // Returns the absolute local file path string to store in Firestore
-    fun saveImageLocally(uri: Uri): Result<String> {
+    suspend fun saveImageLocally(uri: Uri): Result<String> {
         return try {
-            val fileName = "note_${UUID.randomUUID()}.jpg"
-            val destFile = File(context.filesDir, fileName)
-
+            val fileName = "note_${UUID.randomUUID()}"
+            val destFile = File(context.filesDir, "$fileName.file")
+            
             context.contentResolver.openInputStream(uri)?.use { input ->
                 destFile.outputStream().use { output ->
                     input.copyTo(output)
                 }
-            } ?: return Result.failure(Exception("Could not open image stream"))
+            } ?: return Result.failure(Exception("Could not open file stream"))
 
             Result.success(destFile.absolutePath)
         } catch (e: Exception) {
@@ -31,8 +31,8 @@ class StorageService @Inject constructor(
         }
     }
 
-    // Deletes a locally stored image when a note is deleted
-    fun deleteImageLocally(filePath: String): Result<Unit> {
+    // Deletes a locally stored image
+    suspend fun deleteImageLocally(filePath: String): Result<Unit> {
         return try {
             val file = File(filePath)
             if (file.exists()) file.delete()
@@ -42,3 +42,4 @@ class StorageService @Inject constructor(
         }
     }
 }
+

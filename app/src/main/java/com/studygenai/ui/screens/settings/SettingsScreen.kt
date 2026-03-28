@@ -51,7 +51,7 @@ fun SettingsScreen(
     )
 
     Scaffold(
-        containerColor = NeutralGray,
+        containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
             DashboardBottomBar(
                 items          = bottomNavItems,
@@ -77,7 +77,7 @@ fun SettingsScreen(
                 text       = "Settings",
                 fontSize   = 26.sp,
                 fontWeight = FontWeight.Bold,
-                color      = DarkNavy
+                color      = MaterialTheme.colorScheme.onSurface
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -85,7 +85,7 @@ fun SettingsScreen(
             // ── Profile card ──────────────────────────────────────────────────
             Card(
                 shape     = RoundedCornerShape(20.dp),
-                colors    = CardDefaults.cardColors(containerColor = SurfaceWhite),
+                colors    = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                 elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
                 modifier  = Modifier.fillMaxWidth()
             ) {
@@ -109,7 +109,7 @@ fun SettingsScreen(
                                 .ifBlank { "S" },
                             fontSize   = 20.sp,
                             fontWeight = FontWeight.Bold,
-                            color      = SurfaceWhite
+                            color      = Color.White
                         )
                     }
 
@@ -120,13 +120,13 @@ fun SettingsScreen(
                             text       = uiState.user.fullName.ifBlank { "Student" },
                             fontSize   = 16.sp,
                             fontWeight = FontWeight.Bold,
-                            color      = DarkNavy
+                            color      = MaterialTheme.colorScheme.onSurface
                         )
                         Spacer(modifier = Modifier.height(2.dp))
                         Text(
                             text     = uiState.user.email,
                             fontSize = 13.sp,
-                            color    = TextSecondary
+                            color    = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
@@ -140,7 +140,7 @@ fun SettingsScreen(
 
             Card(
                 shape     = RoundedCornerShape(16.dp),
-                colors    = CardDefaults.cardColors(containerColor = SurfaceWhite),
+                colors    = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                 elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
                 modifier  = Modifier.fillMaxWidth()
             ) {
@@ -176,7 +176,7 @@ fun SettingsScreen(
 
             Card(
                 shape     = RoundedCornerShape(16.dp),
-                colors    = CardDefaults.cardColors(containerColor = SurfaceWhite),
+                colors    = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                 elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
                 modifier  = Modifier.fillMaxWidth()
             ) {
@@ -207,7 +207,7 @@ fun SettingsScreen(
 
             Card(
                 shape     = RoundedCornerShape(16.dp),
-                colors    = CardDefaults.cardColors(containerColor = SurfaceWhite),
+                colors    = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                 elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
                 modifier  = Modifier.fillMaxWidth()
             ) {
@@ -274,7 +274,7 @@ fun SettingsSectionLabel(label: String) {
         text          = label.uppercase(),
         fontSize      = 11.sp,
         fontWeight    = FontWeight.SemiBold,
-        color         = TextSecondary,
+        color         = MaterialTheme.colorScheme.onSurfaceVariant,
         letterSpacing = 0.8.sp,
         modifier      = Modifier.padding(horizontal = 4.dp)
     )
@@ -318,21 +318,21 @@ fun SettingsToggleRow(
                     text       = label,
                     fontSize   = 15.sp,
                     fontWeight = FontWeight.Medium,
-                    color      = DarkNavy
+                    color      = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     text     = sublabel,
                     fontSize = 12.sp,
-                    color    = TextSecondary
+                    color    = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
             Switch(
                 checked         = checked,
                 onCheckedChange = onToggle,
                 colors          = SwitchDefaults.colors(
-                    checkedThumbColor   = SurfaceWhite,
+                    checkedThumbColor   = Color.White,
                     checkedTrackColor   = RoyalBlue,
-                    uncheckedThumbColor = SurfaceWhite,
+                    uncheckedThumbColor = Color.White,
                     uncheckedTrackColor = NavUnselected
                 )
             )
@@ -381,13 +381,13 @@ fun SettingsInfoRow(
                 text       = label,
                 fontSize   = 15.sp,
                 fontWeight = FontWeight.Medium,
-                color      = DarkNavy,
+                color      = MaterialTheme.colorScheme.onSurface,
                 modifier   = Modifier.weight(1f)
             )
             Text(
                 text     = value,
                 fontSize = 13.sp,
-                color    = TextSecondary
+                color    = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
         if (showDivider) {
@@ -405,7 +405,7 @@ fun SettingsInfoRow(
 fun SignOutConfirmDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        containerColor   = SurfaceWhite,
+        containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surface,
         shape            = RoundedCornerShape(20.dp),
         icon             = {
             Box(
@@ -428,14 +428,14 @@ fun SignOutConfirmDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
                 text       = stringResource(R.string.action_sign_out),
                 fontWeight = FontWeight.Bold,
                 fontSize   = 17.sp,
-                color      = DarkNavy
+                color      = MaterialTheme.colorScheme.onSurface
             )
         },
         text = {
             Text(
                 text       = "Are you sure you want to sign out of your account?",
                 fontSize   = 14.sp,
-                color      = TextSecondary,
+                color      = MaterialTheme.colorScheme.onSurfaceVariant,
                 lineHeight = 22.sp
             )
         },
@@ -445,12 +445,12 @@ fun SignOutConfirmDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
                 colors  = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF3B30)),
                 shape   = RoundedCornerShape(10.dp)
             ) {
-                Text(stringResource(R.string.action_sign_out), color = SurfaceWhite)
+                Text(stringResource(R.string.action_sign_out), color = Color.White)
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.action_cancel), color = TextSecondary)
+                Text(stringResource(R.string.action_cancel), color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     )

@@ -53,8 +53,9 @@ object AppModule {
         firestore: FirebaseFirestore,
         auth: FirebaseAuth,
         storageService: StorageService,
-        ocrEngine: OcrEngine
-    ): NoteRepository = NoteRepositoryImpl(firestore, auth, storageService, ocrEngine)
+        ocrEngine: OcrEngine,
+        @ApplicationContext context: Context
+    ): NoteRepository = NoteRepositoryImpl(firestore, auth, storageService, ocrEngine, context)
 
     @Provides
     @Singleton

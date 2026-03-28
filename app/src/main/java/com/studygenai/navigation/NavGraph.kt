@@ -77,7 +77,9 @@ fun NavGraph(authRepository: AuthRepository) {
             DashboardScreen(navController)
         }
 
-        composable(Screen.Upload.route)     { }
+        composable(Screen.Upload.route) {
+            com.studygenai.ui.screens.upload.UploadScreen(navController)
+        }
 
         composable(Screen.Library.route) {
             LibraryScreen(navController)

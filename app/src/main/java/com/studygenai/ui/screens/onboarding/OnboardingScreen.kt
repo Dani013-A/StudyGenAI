@@ -53,7 +53,7 @@ fun OnboardingScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(NeutralGray)
+            .background(androidx.compose.material3.MaterialTheme.colorScheme.background)
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -70,7 +70,7 @@ fun OnboardingScreen(
             text = page.title,
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
-            color = DarkNavy,
+            color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
             textAlign = TextAlign.Center
         )
 
@@ -79,7 +79,7 @@ fun OnboardingScreen(
         Text(
             text = page.description,
             fontSize = 15.sp,
-            color = DarkNavy.copy(alpha = 0.55f),
+            color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface.copy(alpha = 0.55f),
             textAlign = TextAlign.Center,
             lineHeight = 24.sp,
             modifier = Modifier.padding(horizontal = 16.dp)
@@ -130,7 +130,7 @@ fun OnboardingScreen(
         // Skip button (only on first two pages)
         if (currentPage < pages.lastIndex) {
             TextButton(onClick = { viewModel.completeOnboarding() }) {
-                Text("Skip", color = DarkNavy.copy(alpha = 0.4f))
+                Text("Skip", color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f))
             }
         }
 

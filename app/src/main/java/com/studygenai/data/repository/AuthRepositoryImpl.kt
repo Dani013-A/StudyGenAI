@@ -9,6 +9,8 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withTimeout
+
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -43,7 +45,9 @@ class AuthRepositoryImpl @Inject constructor(
         password: String
     ): Result<User> {
         return try {
-            val result = auth.createUserWithEmailAndPassword(email, password).await()
+            val result = withTimeout(10000L) {
+                auth.createUserWithEmailAndPassword(email, password).await()
+            }
             val uid = result.user?.uid ?: throw Exception("UID is null after sign up")
 
             // Save user profile to Firestore
@@ -54,11 +58,13 @@ class AuthRepositoryImpl @Inject constructor(
                 "isOnboarded" to false,
                 "createdAt"   to System.currentTimeMillis()
             )
-            firestore
-                .collection(Constants.COLLECTION_USERS)
-                .document(uid)
-                .set(userDoc)
-                .await()
+            withTimeout(10000L) {
+                firestore
+                    .collection(Constants.COLLECTION_USERS)
+                    .document(uid)
+                    .set(userDoc)
+                    .await()
+            }
 
             Result.success(User(uid = uid, fullName = fullName, email = email))
         } catch (e: Exception) {
@@ -68,7 +74,9 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun signIn(email: String, password: String): Result<User> {
         return try {
-            val result = auth.signInWithEmailAndPassword(email, password).await()
+            val result = withTimeout(10000L) {
+                auth.signInWithEmailAndPassword(email, password).await()
+            }
             val uid = result.user?.uid ?: throw Exception("UID is null after sign in")
             val email2 = result.user?.email ?: ""
             Result.success(User(uid = uid, email = email2))
@@ -79,7 +87,9 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun signOut(): Result<Unit> {
         return try {
-            auth.signOut()
+            withTimeout(10000L) {
+                auth.signOut()
+            }
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -88,11 +98,13 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun setOnboarded(uid: String): Result<Unit> {
         return try {
-            firestore
-                .collection(Constants.COLLECTION_USERS)
-                .document(uid)
-                .update("isOnboarded", true)
-                .await()
+            withTimeout(10000L) {
+                firestore
+                    .collection(Constants.COLLECTION_USERS)
+                    .document(uid)
+                    .update("isOnboarded", true)
+                    .await()
+            }
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -101,11 +113,13 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun isOnboarded(uid: String): Boolean {
         return try {
-            val doc = firestore
-                .collection(Constants.COLLECTION_USERS)
-                .document(uid)
-                .get()
-                .await()
+            val doc = withTimeout(10000L) {
+                firestore
+                    .collection(Constants.COLLECTION_USERS)
+                    .document(uid)
+                    .get()
+                    .await()
+            }
             doc.getBoolean("isOnboarded") ?: false
         } catch (e: Exception) {
             false

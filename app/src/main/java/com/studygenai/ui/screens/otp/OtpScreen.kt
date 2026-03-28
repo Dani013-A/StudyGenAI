@@ -99,7 +99,7 @@ fun OtpScreen(
                 text = "Check your email",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold,
-                color = DarkNavy
+                color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface
             )
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -107,7 +107,7 @@ fun OtpScreen(
             Text(
                 text = "We sent a 6-digit OTP to",
                 fontSize = 14.sp,
-                color = DarkNavy.copy(alpha = 0.5f)
+                color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
             )
             Text(
                 text = email,
@@ -122,7 +122,7 @@ fun OtpScreen(
             Card(
                 shape = RoundedCornerShape(20.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.95f)),
+                colors = CardDefaults.cardColors(containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surface.copy(alpha = 0.95f)),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(
@@ -197,7 +197,7 @@ fun OtpScreen(
             ) {
                 Text(
                     text = "Didn't receive the code? ",
-                    color = DarkNavy.copy(alpha = 0.6f)
+                    color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                 )
                 TextButton(
                     onClick = {
@@ -242,7 +242,7 @@ fun OtpInputField(otp: String, onOtpChanged: (String) -> Unit) {
                         modifier = Modifier
                             .weight(1f)
                             .aspectRatio(1f)
-                            .background(Color.White, RoundedCornerShape(12.dp))
+                            .background(androidx.compose.material3.MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp))
                             .border(
                                 width = 2.dp,
                                 color = if (otp.length == index) RoyalBlue else Color.LightGray,
@@ -254,7 +254,7 @@ fun OtpInputField(otp: String, onOtpChanged: (String) -> Unit) {
                             text = char?.toString() ?: "",
                             fontSize = 22.sp,
                             fontWeight = FontWeight.Bold,
-                            color = DarkNavy,
+                            color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
                             textAlign = TextAlign.Center
                         )
                     }

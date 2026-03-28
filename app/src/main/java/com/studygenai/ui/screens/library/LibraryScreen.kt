@@ -55,7 +55,7 @@ fun LibraryScreen(
     )
 
     Scaffold(
-        containerColor = NeutralGray,
+        containerColor = androidx.compose.material3.MaterialTheme.colorScheme.background,
         bottomBar = {
             DashboardBottomBar(
                 items          = bottomNavItems,
@@ -70,8 +70,8 @@ fun LibraryScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick        = { navController.navigate(Screen.Upload.route) },
-                containerColor = DarkNavy,
-                contentColor   = SurfaceWhite,
+                containerColor = androidx.compose.material3.MaterialTheme.colorScheme.primary,
+                contentColor   = androidx.compose.material3.MaterialTheme.colorScheme.onPrimary,
                 shape          = androidx.compose.foundation.shape.CircleShape
             ) {
                 Icon(Icons.Filled.Add, contentDescription = "Upload")
@@ -91,12 +91,12 @@ fun LibraryScreen(
                 text       = "My Files",
                 fontSize   = 26.sp,
                 fontWeight = FontWeight.Bold,
-                color      = DarkNavy
+                color      = androidx.compose.material3.MaterialTheme.colorScheme.onSurface
             )
             Text(
                 text     = "${uiState.allNotes.size} notes",
                 fontSize = 13.sp,
-                color    = TextSecondary
+                color    = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -119,14 +119,14 @@ fun LibraryScreen(
                         Icon(
                             imageVector        = Icons.Outlined.FolderOpen,
                             contentDescription = null,
-                            tint               = NavUnselected,
+                            tint               = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier           = Modifier.size(56.dp)
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                         Text(
                             text      = if (uiState.searchQuery.isBlank())
                                 "No notes yet" else "No results for \"${uiState.searchQuery}\"",
-                            color     = TextSecondary,
+                            color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
                             fontSize  = 14.sp,
                             fontWeight = FontWeight.Medium
                         )
@@ -134,7 +134,7 @@ fun LibraryScreen(
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
                                 text     = "Tap + to upload your first note",
-                                color    = NavUnselected,
+                                color    = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontSize = 12.sp
                             )
                         }
@@ -199,7 +199,7 @@ fun LibrarySearchBar(query: String, onChange: (String) -> Unit) {
             .fillMaxWidth()
             .height(48.dp)
             .clip(RoundedCornerShape(14.dp))
-            .background(SurfaceWhite),
+            .background(androidx.compose.material3.MaterialTheme.colorScheme.surface),
         contentAlignment = Alignment.CenterStart
     ) {
         Row(
@@ -209,18 +209,18 @@ fun LibrarySearchBar(query: String, onChange: (String) -> Unit) {
             Icon(
                 imageVector        = Icons.Outlined.Search,
                 contentDescription = null,
-                tint               = TextSecondary,
+                tint               = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier           = Modifier.size(18.dp)
             )
             Spacer(modifier = Modifier.width(10.dp))
             Box(modifier = Modifier.fillMaxWidth()) {
                 if (query.isEmpty()) {
-                    Text(stringResource(R.string.hint_search_notes), color = TextSecondary, fontSize = 14.sp)
+                    Text(stringResource(R.string.hint_search_notes), color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
                 }
                 BasicTextField(
                     value         = query,
                     onValueChange = onChange,
-                    textStyle     = TextStyle(fontSize = 14.sp, color = DarkNavy),
+                    textStyle     = TextStyle(fontSize = 14.sp, color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface),
                     modifier      = Modifier.fillMaxWidth(),
                     singleLine    = true
                 )
@@ -253,8 +253,8 @@ fun SwipeToDeleteNoteCard(
         backgroundContent = {
             val color by animateColorAsState(
                 targetValue = when (dismissState.targetValue) {
-                    EndToStart -> Color(0xFFFF3B30)
-                    else       -> Color(0xFFFFEEEE)
+                    EndToStart -> androidx.compose.material3.MaterialTheme.colorScheme.error
+                    else       -> Color.Transparent
                 },
                 label = "swipe_bg"
             )
@@ -265,7 +265,8 @@ fun SwipeToDeleteNoteCard(
             Box(
                 modifier         = Modifier
                     .fillMaxSize()
-                    .clip(RoundedCornerShape(14.dp))
+                    .padding(vertical = 6.dp)
+                    .clip(RoundedCornerShape(16.dp))
                     .background(color)
                     .padding(end = 20.dp),
                 contentAlignment = Alignment.CenterEnd
@@ -290,7 +291,7 @@ fun SwipeToDeleteNoteCard(
 fun NoteCard(note: Note, onClick: () -> Unit) {
     Card(
         shape     = RoundedCornerShape(16.dp),
-        colors    = CardDefaults.cardColors(containerColor = SurfaceWhite),
+        colors    = CardDefaults.cardColors(containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         modifier  = Modifier
             .fillMaxWidth()
@@ -310,7 +311,7 @@ fun NoteCard(note: Note, onClick: () -> Unit) {
                 Icon(
                     imageVector        = Icons.Outlined.Description,
                     contentDescription = null,
-                    tint               = RoyalBlue,
+                    tint               = androidx.compose.material3.MaterialTheme.colorScheme.primary,
                     modifier           = Modifier.size(22.dp)
                 )
             }
@@ -322,7 +323,7 @@ fun NoteCard(note: Note, onClick: () -> Unit) {
                     text       = note.title,
                     fontSize   = 14.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color      = DarkNavy,
+                    color      = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
                     maxLines   = 1,
                     overflow   = TextOverflow.Ellipsis
                 )
@@ -331,7 +332,7 @@ fun NoteCard(note: Note, onClick: () -> Unit) {
                     Text(
                         text     = note.subject,
                         fontSize = 11.sp,
-                        color    = RoyalBlue,
+                        color    = androidx.compose.material3.MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Medium
                     )
                     Spacer(modifier = Modifier.height(2.dp))
@@ -339,14 +340,14 @@ fun NoteCard(note: Note, onClick: () -> Unit) {
                 Text(
                     text     = formatRelativeTime(note.createdAt),
                     fontSize = 11.sp,
-                    color    = TextSecondary
+                    color    = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 
             Icon(
                 imageVector        = Icons.Filled.ChevronRight,
                 contentDescription = null,
-                tint               = NavUnselected,
+                tint               = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier           = Modifier.size(18.dp)
             )
         }
@@ -364,7 +365,7 @@ fun NoteDetailDialog(
     Dialog(onDismissRequest = onDismiss) {
         Card(
             shape  = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(containerColor = SurfaceWhite),
+            colors = CardDefaults.cardColors(containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surface),
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(0.75f)
@@ -383,7 +384,7 @@ fun NoteDetailDialog(
                             text       = note.title,
                             fontSize   = 17.sp,
                             fontWeight = FontWeight.Bold,
-                            color      = DarkNavy,
+                            color      = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
                             maxLines   = 2,
                             overflow   = TextOverflow.Ellipsis
                         )
@@ -392,7 +393,7 @@ fun NoteDetailDialog(
                             Text(
                                 text       = note.subject,
                                 fontSize   = 12.sp,
-                                color      = RoyalBlue,
+                                color      = androidx.compose.material3.MaterialTheme.colorScheme.primary,
                                 fontWeight = FontWeight.Medium
                             )
                         }
@@ -401,12 +402,12 @@ fun NoteDetailDialog(
                         Icon(
                             Icons.Filled.Close,
                             contentDescription = "Close",
-                            tint               = TextSecondary
+                            tint               = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
 
-                HorizontalDivider(color = DividerColor)
+                HorizontalDivider(color = androidx.compose.material3.MaterialTheme.colorScheme.outlineVariant)
 
                 // Raw OCR text content
                 Column(
@@ -418,7 +419,7 @@ fun NoteDetailDialog(
                         text       = "Extracted Text",
                         fontSize   = 11.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color      = TextSecondary,
+                        color      = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
                         letterSpacing = 0.8.sp
                     )
                     Spacer(modifier = Modifier.height(10.dp))
@@ -429,14 +430,14 @@ fun NoteDetailDialog(
                             "No text was extracted from this note."
                         },
                         fontSize  = 14.sp,
-                        color     = if (note.rawText.isBlank()) TextSecondary
-                        else DarkNavy,
+                        color     = if (note.rawText.isBlank()) androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
+                        else androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
                         lineHeight = 22.sp,
                         modifier  = Modifier.verticalScroll(scrollState)
                     )
                 }
 
-                HorizontalDivider(color = DividerColor)
+                HorizontalDivider(color = androidx.compose.material3.MaterialTheme.colorScheme.outlineVariant)
 
                 // Action buttons
                 Row(
@@ -469,7 +470,7 @@ fun NoteDetailDialog(
                         onClick  = onDismiss,
                         modifier = Modifier.weight(1f),
                         shape    = RoundedCornerShape(10.dp),
-                        colors   = ButtonDefaults.buttonColors(containerColor = RoyalBlue)
+                        colors   = ButtonDefaults.buttonColors(containerColor = androidx.compose.material3.MaterialTheme.colorScheme.primary)
                     ) {
                         Text(stringResource(R.string.action_done), fontSize = 14.sp)
                     }
@@ -489,7 +490,7 @@ fun DeleteConfirmDialog(
 ) {
     AlertDialog(
         onDismissRequest  = onDismiss,
-        containerColor    = SurfaceWhite,
+        containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surface,
         shape             = RoundedCornerShape(20.dp),
         icon              = {
             Box(
@@ -512,14 +513,14 @@ fun DeleteConfirmDialog(
                 text       = "Delete Note",
                 fontWeight = FontWeight.Bold,
                 fontSize   = 17.sp,
-                color      = DarkNavy
+                color      = androidx.compose.material3.MaterialTheme.colorScheme.onSurface
             )
         },
         text = {
             Text(
                 text     = "\"$noteTitle\" will be permanently deleted. This cannot be undone.",
                 fontSize = 14.sp,
-                color    = TextSecondary,
+                color    = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
                 lineHeight = 22.sp
             )
         },
@@ -534,7 +535,7 @@ fun DeleteConfirmDialog(
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.action_cancel), color = TextSecondary)
+                Text(stringResource(R.string.action_cancel), color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     )

@@ -26,12 +26,15 @@ class MainActivity : ComponentActivity() {
             val prefs = getSharedPreferences("studygenai_prefs", Context.MODE_PRIVATE)
             var isDarkMode by remember { mutableStateOf(prefs.getBoolean("dark_mode", false)) }
 
-            DisposableEffect(Unit) {
-                val listener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPrefs, key ->
+            val listener = remember(prefs) {
+                SharedPreferences.OnSharedPreferenceChangeListener { sharedPrefs, key ->
                     if (key == "dark_mode") {
                         isDarkMode = sharedPrefs.getBoolean("dark_mode", false)
                     }
                 }
+            }
+
+            DisposableEffect(prefs, listener) {
                 prefs.registerOnSharedPreferenceChangeListener(listener)
                 onDispose {
                     prefs.unregisterOnSharedPreferenceChangeListener(listener)
